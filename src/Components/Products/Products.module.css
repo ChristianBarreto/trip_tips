@@ -1,0 +1,22 @@
+.products {
+    margin-top: -20px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    
+
+}
+
+.product_list {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.product_item {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    display: inline-block;
+    white-space:normal;
+
+}

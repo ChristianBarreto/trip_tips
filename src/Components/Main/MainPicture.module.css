@@ -1,0 +1,18 @@
+.bg {
+    background-color: white;
+    background-image: url("http://www.fambrashalal.com.br/blog_port/wp-content/uploads/2018/09/vista-aerea-cidade-dubai-marina.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:cover;
+    height: 400px;
+    padding: 80px;
+
+}
+
+.search {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 500px;
+}
+
+

@@ -1,0 +1,13 @@
+.products {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.product_list {
+    
+}
+
+.product_item {
+    margin-bottom: 10px;
+    white-space:normal;
+}
