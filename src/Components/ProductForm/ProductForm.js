@@ -7,7 +7,14 @@ import { useForm } from "react-hook-form";
 function ProductForm (props){
 
     const [dataArray, setDataArray] = useState([]);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+
+    const defaultValues = {
+        type: "Destination",
+        title: "",
+        img_src: "",
+        description: "",
+    }
 
 
     function submitHandler(event){
@@ -32,6 +39,7 @@ function ProductForm (props){
         ).then(() => {
             props.childToParent(tip_data);
             document.getElementById('news').scrollIntoView(); 
+            reset({ defaultValues })
                      
         });
 
@@ -80,11 +88,13 @@ function ProductForm (props){
                                             type="text" 
                                             placeholder="Image URL" 
                                             {...register("image_url", { required: true, pattern: { 
-                                                value: /http\S/,
-                                                message: "Entered value does not match email format"
+                                                value: /http/,
+                                                message: "Use a http... format for image URLs."
                                             }})}
                                         />
-                                        {errors.image_url && errors.image_url.message}
+                                        {errors.image_url && 
+                                            <p className="text-danger">{errors.image_url.message}</p>
+                                        }
                                         {errors.image_url?.type === 'required' && 
                                             <span className="text-danger">Image URL is required!</span> ||
                                             <span className="text-muted">Image URL from web.</span>
