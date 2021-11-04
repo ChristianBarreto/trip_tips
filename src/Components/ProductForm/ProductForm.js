@@ -1,37 +1,22 @@
 import { useState, useEffect, setState } from 'react';
 import { Card, Button, Row, Col, Container, Form } from 'react-bootstrap';
 import classes from "./ProductForm.module.css";
-import { useRef } from "react";
+import { useForm } from "react-hook-form";
+
 
 function ProductForm (props){
 
-    const typeInputRef = useRef();
-    const titleInputRef = useRef();
-    const imageInputRef = useRef();
-    const descriptionInputRef = useRef();
-
-    /*const [isLoading, setIsLoading] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isLoading, setIsLoading] = useState(true);*/
-    // usar onChange(()=> ) ou invés de ref
-
     const [dataArray, setDataArray] = useState([]);
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
 
     function submitHandler(event){
-        event.preventDefault();
-
-        const typeInput = typeInputRef.current.value;
-        const titleInput = titleInputRef.current.value;
-        const img_srcInput = imageInputRef.current.value;
-        const descriptionInput = descriptionInputRef.current.value;
 
         const tip_data = {
-            type: typeInput,
-            title: titleInput,
-            img_src: img_srcInput,
-            description: descriptionInput,
+            type: watch("type"),
+            title: watch("title"),
+            img_src: watch("image_url"),
+            description: watch("description"),
             timestamp: Date.now(),
         }
 
@@ -46,15 +31,14 @@ function ProductForm (props){
             }
         ).then(() => {
             props.childToParent(tip_data);
-            typeInputRef.current.value = "Destination";
-            titleInputRef.current.value = "";
-            imageInputRef.current.value = "";
-            descriptionInputRef.current.value = "";
             document.getElementById('news').scrollIntoView(); 
                      
         });
+
     }
 
+    console.log(watch("example"));
+    
     return <div>
         <Container>
             <Row>
@@ -65,10 +49,13 @@ function ProductForm (props){
                                 <Card.Title>Add a New Tip</Card.Title>
                                 <Card.Subtitle className="mb-2 text-muted">Share your trip tips with the world!</Card.Subtitle>
 
-                                <Form onSubmit={ submitHandler }>
+                                <Form onSubmit={handleSubmit(submitHandler)}>
 
-                                    <Form.Group className="mb-3" controlId="formBasicEmail" >
-                                        <Form.Select aria-label="Default select example" ref={ typeInputRef }>
+                                    <Form.Group className="mb-3" 
+                                    controlId="formBasicEmail">
+                                        <Form.Select 
+                                            aria-label="Default select example" 
+                                            {...register("type", { required: true })}>
                                             <option value="Destination">Destination</option>
                                             <option value="Flight">Flight</option>
                                             <option value="Hotel">Hotel</option>
@@ -77,23 +64,43 @@ function ProductForm (props){
 
                                     <Form.Group className="mb-3" controlId="formBasicEmail">
                                         <Form.Label>Title:</Form.Label>
-                                        <Form.Control type="text" placeholder="Enter title" ref={ titleInputRef } />
-                                        <Form.Text className="text-muted">
-                                       Name of the city, flight or hotel.
-                                        </Form.Text>
+                                        <Form.Control 
+                                            type="text" 
+                                            placeholder="Enter title" 
+                                            {...register("title", { required: true })}/>
+                                            {errors.title?.type === 'required' && 
+                                                <span className="text-danger">Title is required!</span> ||
+                                                <span className="text-muted">Name of the city, flight or hotel.</span>
+                                            }  
                                     </Form.Group>
 
                                     <Form.Group className="mb-3" controlId="formBasicEmail">
                                         <Form.Label>Image URL:</Form.Label>
-                                        <Form.Control type="text" placeholder="Image URL" ref={ imageInputRef } />
-                                        <Form.Text className="text-muted">
-                                            Copy and paste your image URL here.
-                                        </Form.Text>
+                                        <Form.Control 
+                                            type="text" 
+                                            placeholder="Image URL" 
+                                            {...register("image_url", { required: true, pattern: { 
+                                                value: /http\S/,
+                                                message: "Entered value does not match email format"
+                                            }})}
+                                        />
+                                        {errors.image_url && errors.image_url.message}
+                                        {errors.image_url?.type === 'required' && 
+                                            <span className="text-danger">Image URL is required!</span> ||
+                                            <span className="text-muted">Image URL from web.</span>
+                                        } 
                                     </Form.Group>
 
                                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                                         <Form.Label>Share your tip:</Form.Label>
-                                        <Form.Control as="textarea" rows={3} ref={ descriptionInputRef }/>
+                                        <Form.Control 
+                                            as="textarea" 
+                                            rows={3} 
+                                            {...register("description", { required: true })}/>
+                                            {errors.description?.type === 'required' && 
+                                                <span className="text-danger">Description is required!</span> ||
+                                                <span className="text-muted">Describe the best tip you want to share with the world.</span>
+                                            } 
                                     </Form.Group>
 
                                     <Button variant="primary" type="submit" className={ classes.button }>
